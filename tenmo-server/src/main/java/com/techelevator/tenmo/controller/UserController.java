@@ -6,6 +6,7 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@PreAuthorize("isAuthenticated()")
 public class UserController {
 
     private UserDao userDao;
@@ -25,9 +27,15 @@ public class UserController {
         this.transferDao = transferDao;
     }
 
-    @RequestMapping(path = "/user/account/{id}", method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable int id) throws AccountNotFoundException {
-        return accountDao.displayBalance(id);
+    //@PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping(path = "user/account/{accountId}", method = RequestMethod.GET)
+    public Account getAccount(@PathVariable int accountId) throws AccountNotFoundException {
+        return accountDao.getAccount(accountId);
+    }
+
+    @RequestMapping(path = "/user/account/balance/{accountId}", method = RequestMethod.GET)
+    public BigDecimal getBalance(@PathVariable int accountId) throws AccountNotFoundException {
+        return accountDao.displayBalance(accountId);
     }
 
 
@@ -35,13 +43,20 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/user/account/transfer", method = RequestMethod.POST)
-    public void createNewTransfer(@Valid @RequestBody Transfer newTransfer)
-    {transferDao.create(newTransfer);}
+    public Transfer createNewTransfer(@Valid @RequestBody Transfer newTransfer) {
+        transferDao.create(newTransfer);
+        return newTransfer;
+    }
     //Is there a way to call the transfer created in the above method in the method below?
 
-    @RequestMapping(path = "/user/account/{id}", method = RequestMethod.PUT)
-    public void updateAdd(@Valid Transfer transfer, @RequestBody Account updatedAccount, @PathVariable int id) {
-        accountDao.updateAdd(id, transfer, updatedAccount);
+    @RequestMapping(path = "/user/account/add/{accountId}", method = RequestMethod.PUT)
+    public void updateAdd(@Valid Transfer transfer, @RequestBody Account updatedAccount, @PathVariable int accountId) throws AccountNotFoundException {
+        accountDao.updateAdd(transfer, updatedAccount);
+    }
+
+    @RequestMapping(path = "/user/account/subtract/{accountId}", method = RequestMethod.PUT)
+    public void updateSubtract(@Valid Transfer transfer, @RequestBody Account updatedAccount, @PathVariable int accountId) throws AccountNotFoundException {
+        accountDao.updateSubtract(transfer, updatedAccount);
     }
 
     //End use case 4
@@ -53,9 +68,9 @@ public class UserController {
 
 
     //Fix column error between this and getTransferById() in JdbcTransferDao
-    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
-    public Transfer getTransferById(@PathVariable int id) throws TransferNotFoundException {
-        return transferDao.getTransferById(id);
+    @RequestMapping(path = "/transfer/{transferId}", method = RequestMethod.GET)
+    public Transfer getTransferById(@PathVariable int transferId) throws TransferNotFoundException {
+        return transferDao.getTransferById(transferId);
     }
 
 }

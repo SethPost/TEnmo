@@ -8,12 +8,14 @@ import java.math.BigDecimal;
 
 public interface AccountDao {
 
+    Account getAccount(int accountId) throws AccountNotFoundException;
+
     BigDecimal displayBalance(int accountId) throws AccountNotFoundException;
 
-    boolean updateAdd(int accountId, Transfer transfer, Account account) throws AccountNotFoundException;
+    boolean updateAdd(Transfer transfer, Account account) throws AccountNotFoundException;
 
 
-    boolean updateSubtract(int accountId, Transfer transfer, Account account) throws AccountNotFoundException;
+    boolean updateSubtract(Transfer transfer, Account account) throws AccountNotFoundException;
 
 
 }

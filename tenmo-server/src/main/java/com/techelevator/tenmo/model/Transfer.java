@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 
 public class Transfer {
     private int id;
-    //@Positive(message = "The field 'transferTypeId' is required.")
+    @Positive(message = "The field 'transferTypeId' is required.")
     private int transferTypeId;
-    //@Positive(message = "The field 'transferStatusId' is required.")
+    @Positive(message = "The field 'transferStatusId' is required.")
     private int transferStatusId;
-   //@Positive(message = "The field 'accountFromId' is required.")
+    @Positive(message = "The field 'accountFromId' is required.")
     private int accountFromId;
-    //@Positive(message = "The field 'accountToId' is required.")
+    @Positive(message = "The field 'accountToId' is required.")
     private int accountToId;
     @Positive(message = "The amount must be more than 0.")
     private BigDecimal amount;
