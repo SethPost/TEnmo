@@ -46,12 +46,14 @@ public class UserController {
 
     //End use case 4
 
-    @RequestMapping(path = "/user/{id}/account/transfer", method = RequestMethod.GET)
+    @RequestMapping(path = "/transfer/list/{userId}", method = RequestMethod.GET)
     public List<Transfer> listTransfers(@PathVariable int userId) throws UserNotFoundException {
         return transferDao.displayPastTransfers(userId);
     }
 
-    @RequestMapping(path = "/user/account/transfer/{id}", method = RequestMethod.GET)
+
+    //Fix column error between this and getTransferById() in JdbcTransferDao
+    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
     public Transfer getTransferById(@PathVariable int id) throws TransferNotFoundException {
         return transferDao.getTransferById(id);
     }
