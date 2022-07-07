@@ -17,16 +17,23 @@ public class Transfer {
     private int accountToId;
     @Positive(message = "The amount must be more than 0.")
     private BigDecimal amount;
+    @NotBlank(message = "The field 'typeDescription' is required")
+    private String typeDescription;
+    @NotBlank(message = "The field 'statusDescription' is required")
+    private String statusDescription;
 
     public Transfer() {}
 
-    public Transfer(int id, int transferTypeId, int transferStatusId, int accountFromId, int accountToId, BigDecimal amount) {
+    public Transfer(int id, int transferTypeId, int transferStatusId, int accountFromId, int accountToId,
+                    BigDecimal amount, String typeDescription, String statusDescription) {
         this.id = id;
         this.transferTypeId = transferTypeId;
         this.transferStatusId = transferStatusId;
         this.accountFromId = accountFromId;
         this.accountToId = accountToId;
         this.amount = amount;
+        this.typeDescription = typeDescription;
+        this.statusDescription = statusDescription;
     }
 
     public int getId() {
@@ -75,5 +82,21 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getTypeDescription() {
+        return typeDescription;
+    }
+
+    public void setTypeDescription(String typeDescription) {
+        this.typeDescription = typeDescription;
+    }
+
+    public String getStatusDescription() {
+        return statusDescription;
+    }
+
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
     }
 }

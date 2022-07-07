@@ -8,11 +8,10 @@ import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AccountNotFoundException;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferNotFoundException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 
 @RestController
@@ -37,5 +36,20 @@ public class UserController {
     public Transfer getTransferById(@PathVariable int id) throws TransferNotFoundException {
         return transferDao.getTransferById(id);
     }
+
+    //Start use case 4
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
+    public void createNewTransfer(@Valid @RequestBody Transfer newTransfer)
+    {transferDao.create(newTransfer);}
+    //Is there a way to call the transfer created in the above method in the method below?
+
+    @RequestMapping(path = "/account/{id}", method = RequestMethod.PUT)
+    public void updateAdd(@Valid Transfer transfer, @RequestBody Account updatedAccount, @PathVariable int id) {
+        accountDao.updateAdd(id, transfer, updatedAccount);
+    }
+
+    //End use case 4
 
 }
