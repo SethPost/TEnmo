@@ -4,15 +4,13 @@ import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.AccountNotFoundException;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferNotFoundException;
+import com.techelevator.tenmo.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -27,29 +25,35 @@ public class UserController {
         this.transferDao = transferDao;
     }
 
-    @RequestMapping(path = "/account/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/user/account/{id}", method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable int id) throws AccountNotFoundException {
         return accountDao.displayBalance(id);
     }
 
-    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
-    public Transfer getTransferById(@PathVariable int id) throws TransferNotFoundException {
-        return transferDao.getTransferById(id);
-    }
 
     //Start use case 4
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
+    @RequestMapping(path = "/user/account/transfer", method = RequestMethod.POST)
     public void createNewTransfer(@Valid @RequestBody Transfer newTransfer)
     {transferDao.create(newTransfer);}
     //Is there a way to call the transfer created in the above method in the method below?
 
-    @RequestMapping(path = "/account/{id}", method = RequestMethod.PUT)
+    @RequestMapping(path = "/user/account/{id}", method = RequestMethod.PUT)
     public void updateAdd(@Valid Transfer transfer, @RequestBody Account updatedAccount, @PathVariable int id) {
         accountDao.updateAdd(id, transfer, updatedAccount);
     }
 
     //End use case 4
+
+    @RequestMapping(path = "/user/{id}/account/transfer", method = RequestMethod.GET)
+    public List<Transfer> listTransfers(@PathVariable int userId) throws UserNotFoundException {
+        return transferDao.displayPastTransfers(userId);
+    }
+
+    @RequestMapping(path = "/user/account/transfer/{id}", method = RequestMethod.GET)
+    public Transfer getTransferById(@PathVariable int id) throws TransferNotFoundException {
+        return transferDao.getTransferById(id);
+    }
 
 }

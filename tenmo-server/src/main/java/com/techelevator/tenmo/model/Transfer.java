@@ -2,18 +2,19 @@ package com.techelevator.tenmo.model;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class Transfer {
     private int id;
-    @NotBlank(message = "The field 'transferTypeId' is required.")
+    @Positive(message = "The field 'transferTypeId' is required.")
     private int transferTypeId;
-    @NotBlank(message = "The field 'transferStatusId' is required.")
+    @Positive(message = "The field 'transferStatusId' is required.")
     private int transferStatusId;
-    @NotBlank(message = "The field 'accountFromId' is required.")
+    @Positive(message = "The field 'accountFromId' is required.")
     private int accountFromId;
-    @NotBlank(message = "The field 'accountToId' is required.")
+    @Positive(message = "The field 'accountToId' is required.")
     private int accountToId;
     @Positive(message = "The amount must be more than 0.")
     private BigDecimal amount;
@@ -21,11 +22,13 @@ public class Transfer {
     private String typeDescription;
     @NotBlank(message = "The field 'statusDescription' is required")
     private String statusDescription;
+    private String fromUsername;
+    private String toUsername;
 
     public Transfer() {}
 
     public Transfer(int id, int transferTypeId, int transferStatusId, int accountFromId, int accountToId,
-                    BigDecimal amount, String typeDescription, String statusDescription) {
+                    BigDecimal amount, String typeDescription, String statusDescription, String fromUsername, String toUsername) {
         this.id = id;
         this.transferTypeId = transferTypeId;
         this.transferStatusId = transferStatusId;
@@ -34,6 +37,8 @@ public class Transfer {
         this.amount = amount;
         this.typeDescription = typeDescription;
         this.statusDescription = statusDescription;
+        this.fromUsername = fromUsername;
+        this.toUsername = toUsername;
     }
 
     public int getId() {
@@ -98,5 +103,21 @@ public class Transfer {
 
     public void setStatusDescription(String statusDescription) {
         this.statusDescription = statusDescription;
+    }
+
+    public String getFromUsername() {
+        return fromUsername;
+    }
+
+    public void setFromUsername(String fromUsername) {
+        this.fromUsername = fromUsername;
+    }
+
+    public String getToUsername() {
+        return toUsername;
+    }
+
+    public void setToUsername(String toUsername) {
+        this.toUsername = toUsername;
     }
 }

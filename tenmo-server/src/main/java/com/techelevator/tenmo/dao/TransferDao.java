@@ -9,7 +9,7 @@ public interface TransferDao {
 
     boolean create(Transfer transfer);
 
-    List<Transfer> displayPastTransfers();
+    List<Transfer> displayPastTransfers(int userId);
 
     Transfer getTransferById(int transferId);
 
