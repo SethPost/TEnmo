@@ -26,7 +26,7 @@ public class JdbcTransferDao implements TransferDao {
         // STEP 2 - Write out the SQL we want to execute and save it to a string
         String sql = "INSERT INTO tenmo_transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, " +
                      "account_to, amount) " +
-                     "VALUES (DEFAULT, ?, ?, ?, ?, ?);";
+                     "VALUES (DEFAULT, ?, 2, ?, ?, ?);";
 
         // STEP 3 - Send the SQL to the database and then store the results if necessary
         //         a) If we expect multiple rows or columns coming back (a spreadsheet) then we use jdbcTemplate.queryForRowSet
@@ -36,7 +36,7 @@ public class JdbcTransferDao implements TransferDao {
         // STEP 4 - If we have results and need to transfer them to objects, do that here
 
         // STEP 5 - Return the result if necessary
-        return jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFromId(),
+        return jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getAccountFromId(),
             transfer.getAccountToId(), transfer.getAmount()) == 1;
     }
 

@@ -58,6 +58,7 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
+        currentUser.getToken(); //reference lecture final d16
     }
 
     private void mainMenu() {

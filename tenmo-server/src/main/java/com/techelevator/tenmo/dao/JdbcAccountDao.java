@@ -43,14 +43,14 @@ public class JdbcAccountDao implements AccountDao{
     @Override
     public boolean updateAdd(Transfer transfer, Account account) throws AccountNotFoundException {
         int accountId = transfer.getAccountToId();
-        String sql = "UPDATE account SET balance = ? WHERE account_id = ?;";
+        String sql = "UPDATE tenmo_account SET balance = ? WHERE account_id = ?;";
         return jdbcTemplate.update(sql, (account.getBalance().add(transfer.getAmount())), accountId) == 1;
     }
 
     @Override
     public boolean updateSubtract(Transfer transfer, Account account) throws AccountNotFoundException {
         int accountId = transfer.getAccountFromId();
-        String sql = "UPDATE account SET balance = ? WHERE account_id = ?;";
+        String sql = "UPDATE tenmo_account SET balance = ? WHERE account_id = ?;";
         return jdbcTemplate.update(sql, (account.getBalance().subtract(transfer.getAmount())), accountId) == 1;
     }
 
