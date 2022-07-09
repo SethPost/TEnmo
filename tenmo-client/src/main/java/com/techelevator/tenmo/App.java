@@ -1,9 +1,11 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.UserService;
+
+import java.math.BigDecimal;
 
 public class App {
 
@@ -11,6 +13,7 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private final UserService userService = new UserService();
 
     private AuthenticatedUser currentUser;
 
@@ -58,7 +61,9 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
-        currentUser.getToken(); //reference lecture final d16
+        // ***** WHAT IS THIS *****
+        userService.setAuthToken(currentUser.getToken());
+       //currentUser.setToken(currentUser.getToken()); //reference lecture final d16
     }
 
     private void mainMenu() {
@@ -87,12 +92,18 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-        System.out.println();
+       int accountId = consoleService.promptForInt("Please enter your account number: ");
+       System.out.println("Your account balance is: $" + userService.getBalance(accountId));
 		
 	}
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
+        int userId = consoleService.promptForInt("Please enter your user ID number: ");
+        Transfer[] transfers = userService.listTransfers(userId);
+        for (Transfer transfer : transfers) {
+            System.out.println(transfer.toString());
+        }
 		
 	}
 
@@ -103,7 +114,29 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-		
+        Transfer transferEnteredByUser = new Transfer();
+
+        User[] users = userService.findAllUsers();
+        System.out.println(users);
+
+        long longUserId = currentUser.getUser().getId();
+        int fromUserId = (int)longUserId;
+        User fromUser = userService.getUserById(fromUserId);
+        String fromUserName = fromUser.getUsername();
+        transferEnteredByUser.setFromUserName(fromUserName);
+
+        int toUserId = consoleService.promptForInt("Please enter the user ID for the person you would like to send TE bucks to: ");
+        User toUser = userService.getUserById(toUserId);
+        String toUserName = toUser.getUsername();
+        transferEnteredByUser.setToUserName(toUserName);
+
+        BigDecimal amount = consoleService.promptForBigDecimal("Please enter the amount of TE bucks you would like to send: ");
+        transferEnteredByUser.setAmount(amount);
+
+        Transfer transferFromApi = userService.sendTransfer(transferEnteredByUser);
+        if (transferFromApi == null) {
+            consoleService.printErrorMessage();
+        }
 	}
 
 	private void requestBucks() {

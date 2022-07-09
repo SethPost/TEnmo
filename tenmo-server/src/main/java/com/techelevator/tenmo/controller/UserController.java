@@ -28,7 +28,7 @@ public class UserController {
         this.transferDao = transferDao;
     }
 
-    //@PreAuthorize("hasRole('ROLE_USER')")
+
     @RequestMapping(path = "user/account/{accountId}", method = RequestMethod.GET)
     public Account getAccount(@PathVariable int accountId, Principal user) throws AccountNotFoundException {
 
@@ -106,6 +106,16 @@ public class UserController {
         } else {
             throw new ForbiddenException();
         }
+    }
+
+    @RequestMapping(path = "/user/list", method = RequestMethod.GET)
+    public List<User> findAll() {
+        return userDao.findAll();
+    }
+
+    @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
+    public User getUserById(@PathVariable int userId) throws UserNotFoundException {
+        return userDao.getUserById(userId);
     }
 
 
