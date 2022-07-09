@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 public class Transfer {
     private int id;
-    private int transferTypeId;
-    private int transferStatusId;
+    private int transferTypeId = 2;
+    private int transferStatusId = 2;
     private int accountFromId;
     private int accountToId;
     private BigDecimal amount;
-    private String typeDescription;
-    private String statusDescription;
+    private String typeDescription = "Send";
+    private String statusDescription = "Approved";
     private String fromUserName;
     private String toUserName;
 

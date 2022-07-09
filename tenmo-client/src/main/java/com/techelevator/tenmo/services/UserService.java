@@ -5,6 +5,7 @@ import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.*;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -66,6 +67,19 @@ public class UserService {
             BasicLogger.log(e.getMessage());
         }
         return user;
+    }
+
+    public Account getAccountByUserId(int userId) {
+        Account account = null;
+        try {
+            ResponseEntity<Account> response =
+                    restTemplate.exchange(API_BASE_URL + "user/account_by_user/" + userId,
+                            HttpMethod.GET, makeAuthEntity(), Account.class);
+            account = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return account;
     }
 
 

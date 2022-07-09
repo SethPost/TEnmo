@@ -3,6 +3,7 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AccountNotFoundException;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.UserNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,18 @@ public class JdbcAccountDao implements AccountDao{
 
         String sql = "SELECT account_id, user_id, balance FROM tenmo_account WHERE account_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        if (results.next()) {
+            account = mapRowToAccount(results);
+        }
+        return account;
+    }
+
+    @Override
+    public Account getAccountByUserId(int userId) throws UserNotFoundException {
+        Account account = new Account();
+
+        String sql = "SELECT account_id, user_id, balance FROM tenmo_account WHERE user_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             account = mapRowToAccount(results);
         }

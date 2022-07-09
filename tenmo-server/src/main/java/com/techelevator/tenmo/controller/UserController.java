@@ -30,19 +30,13 @@ public class UserController {
 
 
     @RequestMapping(path = "user/account/{accountId}", method = RequestMethod.GET)
-    public Account getAccount(@PathVariable int accountId, Principal user) throws AccountNotFoundException {
+    public Account getAccount(@PathVariable int accountId) throws AccountNotFoundException {
+        return accountDao.getAccount(accountId);
+    }
 
-        Account searchedAccount = accountDao.getAccount(accountId);
-        int userId = searchedAccount.getUserId();
-        User searchedUser = userDao.getUserById(userId);
-        String searchedUsername = searchedUser.getUsername();
-
-        String username = user.getName();
-        if (username.equals(searchedUsername)) {
-            return accountDao.getAccount(accountId);
-        } else {
-            throw new ForbiddenException();
-        }
+    @RequestMapping(path = "user/account_by_user/{userId}", method = RequestMethod.GET)
+    public Account getAccountByUserId(@PathVariable int userId) throws UserNotFoundException {
+        return accountDao.getAccountByUserId(userId);
     }
 
     @RequestMapping(path = "/user/account/balance/{accountId}", method = RequestMethod.GET)

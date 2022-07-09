@@ -101,8 +101,36 @@ public class App {
 		// TODO Auto-generated method stub
         int userId = consoleService.promptForInt("Please enter your user ID number: ");
         Transfer[] transfers = userService.listTransfers(userId);
+        User toUser = null;
+        User fromUser = null;
         for (Transfer transfer : transfers) {
+            Account fromAccount = userService.getAccount(transfer.getAccountFromId());
+            int fromUserId = fromAccount.getUserId();
+            fromUser = userService.getUserById(fromUserId);
+            transfer.setFromUserName(fromUser.getUsername());
+
+            Account toAccount = userService.getAccount(transfer.getAccountToId());
+            int toUserId = toAccount.getUserId();
+            toUser = userService.getUserById(toUserId);
+            transfer.setToUserName(toUser.getUsername());
+
             System.out.println(transfer.toString());
+        }
+        System.out.println();
+        int transferId = consoleService.promptForInt("Please enter a transfer Id number to view details: ");
+        Transfer specificTransfer = userService.getTransferById(transferId);
+        if (specificTransfer != null) {
+            System.out.println("---------------------");
+            System.out.println("Transfer Details");
+            System.out.println("---------------------");
+            System.out.println("Id: " + specificTransfer.getId());
+            System.out.println("From: " + fromUser.getUsername());
+            System.out.println("To: " + toUser.getUsername());
+            System.out.println("Type: " + specificTransfer.getTypeDescription());
+            System.out.println("Status: " + specificTransfer.getStatusDescription());
+            System.out.println("Amount: " + specificTransfer.getAmount());
+        } else {
+            consoleService.printErrorMessage();
         }
 		
 	}
@@ -117,25 +145,41 @@ public class App {
         Transfer transferEnteredByUser = new Transfer();
 
         User[] users = userService.findAllUsers();
-        System.out.println(users);
+        for (User user : users) {
+            System.out.println(user.toString());
+        }
 
         long longUserId = currentUser.getUser().getId();
         int fromUserId = (int)longUserId;
+        Account fromAccount = userService.getAccountByUserId(fromUserId);
+        int fromAccountId = fromAccount.getId();
+        transferEnteredByUser.setAccountFromId(fromAccountId);
+
         User fromUser = userService.getUserById(fromUserId);
         String fromUserName = fromUser.getUsername();
         transferEnteredByUser.setFromUserName(fromUserName);
 
         int toUserId = consoleService.promptForInt("Please enter the user ID for the person you would like to send TE bucks to: ");
         User toUser = userService.getUserById(toUserId);
+        Account toAccount = userService.getAccountByUserId(toUserId);
+        int toAccountId = toAccount.getId();
+        transferEnteredByUser.setAccountToId(toAccountId);
+
         String toUserName = toUser.getUsername();
         transferEnteredByUser.setToUserName(toUserName);
 
         BigDecimal amount = consoleService.promptForBigDecimal("Please enter the amount of TE bucks you would like to send: ");
-        transferEnteredByUser.setAmount(amount);
+        if (amount.compareTo(new BigDecimal("0.00")) <= 0) {
+            consoleService.printErrorMessage();
+        } else {
+            transferEnteredByUser.setAmount(amount);
+        }
 
         Transfer transferFromApi = userService.sendTransfer(transferEnteredByUser);
         if (transferFromApi == null) {
             consoleService.printErrorMessage();
+        } else {
+            System.out.println("TE bucks sent successfully!");
         }
 	}
 
