@@ -92,7 +92,10 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-       int accountId = consoleService.promptForInt("Please enter your account number: ");
+        long longUserId = currentUser.getUser().getId();
+        int userId = (int)longUserId;
+        Account account = userService.getAccountByUserId(userId);
+        int accountId = account.getId();
        System.out.println("Your account balance is: $" + userService.getBalance(accountId));
 		
 	}
