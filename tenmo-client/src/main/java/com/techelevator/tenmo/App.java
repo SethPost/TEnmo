@@ -196,7 +196,7 @@ public class App {
                     toUserId = consoleService.promptForInt("You cannot enter your own ID. Please try again: ");
                     toUser = userService.getUserById(toUserId);
                 } else if (toUser == null) {
-                    toUserId = consoleService.promptForInt("Please enter a valid user ID, or press '0' to exit: ");
+                    toUserId = consoleService.promptForInt("Please enter a valid user ID: ");
                     toUser = userService.getUserById(toUserId);
                     if (toUserId == 0) {
                         break;
