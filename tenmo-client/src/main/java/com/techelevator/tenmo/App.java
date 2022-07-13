@@ -60,9 +60,9 @@ public class App {
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
             consoleService.printErrorMessage();
+        } else {
+            userService.setAuthToken(currentUser.getToken());
         }
-        // ***** WHAT IS THIS *****
-        userService.setAuthToken(currentUser.getToken());
        //currentUser.setToken(currentUser.getToken()); //reference lecture final d16
     }
 
